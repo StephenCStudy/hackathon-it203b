@@ -1,5 +1,6 @@
 package org.ra.entity;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Document {
@@ -49,7 +50,7 @@ public class Document {
         this.fileSize = fileSize;
     }
 
-    public Document inputData(Scanner scanner) {
+    public Document inputData(Scanner scanner, List<Document> documents) {
         while (true) {
             System.out.print("Enter ID: ");
             documentId = scanner.next();

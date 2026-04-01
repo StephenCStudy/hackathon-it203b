@@ -12,75 +12,62 @@ public class DocumentManagement {
         DocumentBusiness db = DocumentBusiness.getInstance();
 
         try {
-        do {
-            System.out.println(" ======= Quan ly tai lieu so =============");
-            System.out.println("1. Hien thi danh sach toan bo tai lieu");
-            System.out.println("2. Them moi tai lieu");
-            System.out.println("3. Cap nhat thong tin tai lieu theo ma tai lieu (id)");
-            System.out.println("4. Xoa tai lieu theo ma tai lieu");
-            System.out.println("5. Tim kiem tai lieu theo ten");
-            System.out.println("6. Loc danh sach tai lieu pho bien (luot tai >=1000)");
-            System.out.println("7. Sap xep danh sach tai lieu giam dan theo luot tai");
-            System.out.println("8. Thoat");
+            do {
+                try {
+                    System.out.println("\n===== QUAN LY TAI LIEU =====");
+                    System.out.println("1. Hien thi danh sach");
+                    System.out.println("2. Them tai lieu");
+                    System.out.println("3. Cap nhat");
+                    System.out.println("4. Xoa");
+                    System.out.println("5. Tim kiem theo ten");
+                    System.out.println("6. Loc >=1000 downloads");
+                    System.out.println("7. Sap xep giam dan downloads");
+                    System.out.println("8. Thoat");
 
-            System.out.print("Nhap lua chon cua ban: ");
-            choice = Integer.parseInt(scanner.nextLine());
-            switch (choice) {
-                case 1:
-                    db.DisplayDocumentsList();
-                    break;
-                case 2:
-                    // khi thêm tài liệu, hỏi người dùng thêm liên tục nhiều tài liệu (yes/no), bắt lỗi trùng lặp id, cho phép nhập lại
-                    System.out.println("Ban muon them nhieu tai lieu (YES/NO): ");
-                    String answer = scanner.nextLine().toLowerCase();
-                    Document doc = new Document();
-                    switch (answer) {
-                        case "yes":
-                            System.out.print("Nhap so lan: ");
-                            int n = Integer.parseInt(scanner.nextLine());
-                            for (int i = 0; i < n; i++) {
-                                db.CreateDocument(doc.inputData(scanner));
+                    choice = Integer.parseInt(scanner.nextLine());
+
+                    switch (choice) {
+                        case 1:
+                            db.displayDocumentsList();
+                            break;
+                        case 2:
+                            while (true) {
+                                Document doc = new Document();
+                                db.createDocument(doc.inputData(scanner, db.getDocuments()));
+
+                                System.out.print("Tiep tuc? (y/n): ");
+                                if (!scanner.nextLine().equalsIgnoreCase("y")) break;
                             }
                             break;
-                        case "no":
-                            db.CreateDocument(doc.inputData(scanner));
+                        case 3:
+                            System.out.print("Nhap ID: ");
+                            db.updateDocumentById(scanner.nextLine(), scanner);
+                            break;
+                        case 4:
+                            System.out.print("Nhap ID: ");
+                            db.deleteById(scanner.nextLine());
+                            break;
+                        case 5:
+                            System.out.print("Nhap ten: ");
+                            db.searchByName(scanner.nextLine());
+                            break;
+                        case 6:
+                            db.filterPopular();
+                            break;
+                        case 7:
+                            db.sortByDownloadsDesc();
+                            break;
+                        case 8:
+                            System.out.println("Thoat");
                             break;
                         default:
-                            System.out.println("ban phai lua chon (YES/NO) !");
-                            break;
+                            System.out.println("Sai lua chon");
                     }
-                    break;
-                case 3:
-                    // khi nhập thông tin, cho phép người dùng lựa chọn cập nhật thông tin gì, không cho phép chỉnh sửa id
-                    System.out.print("Nhap id muon chinh sua: ");
-                    db.UpdateDocumentById(scanner.nextLine());
-                    break;
-                case 4:
-                    // bắt lỗi không tìm thấy tài liệu in ra "mã tài liệu không tồn tại trong hệ thống" case 3 & 4
-                    break;
-                case 5:
-                    System.out.println("Nhap ten muon tim kiem");
-                    db.SreachDocumentByName(scanner.nextLine());
-                    //5
-                    break;
-                case 6:
-                    db.SortDownloadsByCount()
-                    // 6
-                    break;
-                case 7:
-                    // 7
-                    break;
-                case 8:
-                    System.out.println("Ket thuc chuong trinh");
-                    break;
-                default:
-                    System.out.println("Nhap sai lua chon, vui long nhap lai");
-                    break;
-
-            }
-                } while (choice !=8);
-            } catch (Exception e){
-            System.out.println(e.getMessage());
-        }
+                } catch (Exception e) {
+                    System.out.println("Loi: " + e.getMessage());
+                    choice = 0;
+                }
+            } while (choice != 8);
+        } finally {}
     }
 }
